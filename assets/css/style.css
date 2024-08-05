@@ -1,97 +1,148 @@
+/* General body styles */
 body {
-    background-color: #f0f8ff;
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
 }
 
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.header, .footer {
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    height: 100%;
     background-color: #333;
     color: #fff;
+    padding: 15px;
+    position: fixed; /* Fixed position to stay in place */
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto; /* Allows scrolling if content overflows */
+}
+
+/* Sidebar heading styles */
+.sidebar h2 {
     text-align: center;
-    padding: 10px 0;
+    margin-bottom: 20px;
 }
 
-.header h1, .footer p {
-    margin: 0;
+/* Sidebar navigation styles */
+.sidebar nav ul {
+    list-style-type: none;
+    padding: 0;
 }
 
-.content {
-    margin: 20px 0;
-    text-align: center;
+.sidebar nav ul li {
+    margin: 15px 0;
 }
 
-.button {
-    background-color: #007bff;
+.sidebar nav ul li a {
     color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    margin: 5px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 
-.button:hover {
-    background-color: #0056b3;
-}
-
-.icons {
-    font-size: 48px;
-    margin: 20px 0;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-}
-
-.form-icon {
-    font-size: 24px;
+.sidebar nav ul li a .fas {
     margin-right: 10px;
 }
 
-btn:hover {
-    background: #0069d9;
-    cursor: pointer;
-  }
-  
-  .inline-links {
-    list-style: none;
+.sidebar nav ul li a.logout {
+    color: #ff4b4b;
+}
+
+/* Main content area styles */
+.main-content {
+    margin-left: 250px; /* Offset to account for the fixed sidebar */
+    padding: 20px;
+    width: 100%;/* Adjust width to fill remaining space */
+    height: 100%; /* Ensure it takes the full height */
+     /* Include padding and border in width/height calculations */
+}
+
+/* Header styles */
+header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 15px;
+}
+
+header h1 {
+    margin: 0;
+    text-align: center;
+}
+
+header nav ul {
     display: flex;
-    align-items: baseline;
     justify-content: center;
-    font-size: .875rem;
-  
-  }
-  .inline-links li span{
-    color: #373b4b;
-  }
-  .inline-links li a{
-    color: #373b4b;
+    padding: 0;
+}
+
+header nav ul li {
+    margin: 0 10px;
+}
+
+header nav ul li a {
+    color: #fff;
     text-decoration: none;
-  }
-  
-  .inline-links-item {
-    padding-inline: 1.25rem;
-  }
-  
-  .inline-links-item a.link{
-    text-decoration: underline;
-  }
-  
+}
+
+header nav ul li a.logout {
+    color: #ff4b4b;
+}
+
+/* Container styles */
+.container {
+    margin: 20px auto;
+    max-width: 1200px; /* Limit maximum width for better readability */
+}
+
+/* Form styles */
+form {
+    margin-bottom: 20px;
+}
+
+form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+form input[type="date"],
+form select {
+    margin-bottom: 10px;
+    padding: 5px;
+    width: 100%;
+}
+
+form button {
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+form button i {
+    margin-right: 5px;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}

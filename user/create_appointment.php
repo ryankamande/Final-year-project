@@ -19,11 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
         $stmt->close();
 
-        // Update the vehicle service status
-        $stmt = $conn->prepare("UPDATE vehicle_status SET service_status = 'Booked' WHERE plateNo = ?");
-        $stmt->bind_param("s", $plateNo);
-        $stmt->execute();
-        $stmt->close();
+     
 
         // Commit transaction
         $conn->commit();

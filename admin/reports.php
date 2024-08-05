@@ -42,136 +42,125 @@ $appointmentsResult = $conn->query($appointmentsQuery)->fetch_assoc();
 <html>
 <head>
     <title>Generate Reports</title>
-    <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/admin_style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
 </head>
 <body>
-    <header>
-        <h1>Generate Reports</h1>
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
         <nav>
             <ul>
                 <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="manage_attendance.php"><i class="fas fa-user-check"></i> Manage Attendance</a></li>
+                <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
+                <li><a href="update_vehicle_status.php"><i class="fas fa-car"></i> Update Vehicle Status</a></li>
+                <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
                 <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
-    </header>
-    <div class="container">
-        <h2>Reports</h2>
-        
-        <form method="post">
-            <label for="start_date">Start Date:</label>
-            <input type="date" id="start_date" name="start_date" value="<?php echo htmlspecialchars($startDate); ?>">
-            
-            <label for="end_date">End Date:</label>
-            <input type="date" id="end_date" name="end_date" value="<?php echo htmlspecialchars($endDate); ?>">
-            
-            <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
-        </form>
-        
-        <h3>Total Sales</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Period</th>
-                    <th>Sales Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Weekly Sales</td>
-                    <td>KSH.<?php echo number_format($salesResult['weekly_sales'], 2); ?></td>
-                </tr>
-                <tr>
-                    <td>Monthly Sales</td>
-                    <td>KSH.<?php echo number_format($salesResult['monthly_sales'], 2); ?></td>
-                </tr>
-                <tr>
-                    <td>Yearly Sales</td>
-                    <td>KSH.<?php echo number_format($salesResult['yearly_sales'], 2); ?></td>
-                </tr>
-            </tbody>
-        </table>
+    </div>
+    <div class="main-content">
+        <header>
+            <h1>Generate Reports</h1>
+        </header>
+        <div class="container">
+            <h2>Reports</h2>
+            <form method="post">
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" value="<?php echo htmlspecialchars($startDate); ?>">
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" value="<?php echo htmlspecialchars($endDate); ?>">
+                <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
+            </form>
 
-        <h3>Payments</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Count</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Successful Payments</td>
-                    <td><?php echo $paymentsResult['successful_payments']; ?></td>
-                </tr>
-                <tr>
-                    <td>Pending Payments</td>
-                    <td><?php echo $paymentsResult['pending_payments']; ?></td>
-                </tr>
-            </tbody>
-        </table>
+            <h3>Total Sales</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Sales Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Weekly Sales</td>
+                        <td>KSH.<?php echo number_format($salesResult['weekly_sales'], 2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Monthly Sales</td>
+                        <td>KSH.<?php echo number_format($salesResult['monthly_sales'], 2); ?></td>
+                    </tr>
+                    <tr>
+                        <td>Yearly Sales</td>
+                        <td>KSH.<?php echo number_format($salesResult['yearly_sales'], 2); ?></td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <h3>Inventory</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Total In-Stock</td>
-                    <td><?php echo $inventoryResult['total_in_stock']; ?> items</td>
-                </tr>
-                <tr>
-                    <td>Total Used Stock</td>
-                    <td><?php echo $inventoryResult['total_used']; ?> items</td>
-                </tr>
-            </tbody>
-        </table>
+            <h3>Payments</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Successful Payments</td>
+                        <td><?php echo $paymentsResult['successful_payments']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Pending Payments</td>
+                        <td><?php echo $paymentsResult['pending_payments']; ?></td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <h3>Appointments</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Status</th>
-                    <th>Count</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Booked Appointments</td>
-                    <td><?php echo $appointmentsResult['booked_appointments']; ?></td>
-                </tr>
-                <tr>
-                    <td>Completed Appointments</td>
-                    <td><?php echo $appointmentsResult['completed_appointments']; ?></td>
-                </tr>
-                <tr>
-                    <td>Rescheduled Appointments</td>
-                    <td><?php echo $appointmentsResult['rescheduled_appointments']; ?></td>
-                </tr>
-            </tbody>
-        </table>
+            <h3>Inventory</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total In-Stock</td>
+                        <td><?php echo $inventoryResult['total_in_stock']; ?> items</td>
+                    </tr>
+                    <tr>
+                        <td>Total Used Stock</td>
+                        <td><?php echo $inventoryResult['total_used']; ?> items</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Appointments</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Status</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Booked Appointments</td>
+                        <td><?php echo $appointmentsResult['booked_appointments']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Completed Appointments</td>
+                        <td><?php echo $appointmentsResult['completed_appointments']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>Rescheduled Appointments</td>
+                        <td><?php echo $appointmentsResult['rescheduled_appointments']; ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>

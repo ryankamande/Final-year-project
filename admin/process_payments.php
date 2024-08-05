@@ -1,12 +1,16 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] == 'admin') {
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] = 'admin') {
     header('Location: ../login.php');
     exit;
 }
 
 include '../config.php'; // Assuming your config.php sets up the $conn variable
 include '../functions.php';
+
+// Initialize variables
+$errorMsg = '';
+$successMsg = '';
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -15,17 +19,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $customerId = sanitizeInput($_POST['customer_id']);
     $appointmentId = sanitizeInput($_POST['appointment_id']);
     
-    // Insert payment into database
-    $stmt = $conn->prepare("INSERT INTO payment (customer_id, appointment_id, amount, method, date) VALUES (?, ?, ?, ?, NOW())");
-    $stmt->bind_param("iids", $customerId, $appointmentId, $paymentAmount, $paymentMethod);
-    
-    if ($stmt->execute()) {
-        echo "Payment processed successfully.";
+    // Validate inputs
+    if (empty($paymentAmount) || empty($paymentMethod) || empty($customerId) || empty($appointmentId)) {
+        $errorMsg = 'All fields are required.';
     } else {
-        echo "Error: " . $stmt->error;
+        // Insert payment into database
+        $stmt = $conn->prepare("INSERT INTO payment (customer_id, appointment_id, amount, method, date) VALUES (?, ?, ?, ?, NOW())");
+        $stmt->bind_param("iids", $customerId, $appointmentId, $paymentAmount, $paymentMethod);
+        
+        if ($stmt->execute()) {
+            $successMsg = "Payment processed successfully.";
+        } else {
+            $errorMsg = "Error: " . $stmt->error;
+        }
+        
+        $stmt->close();
     }
     
-    $stmt->close();
     $conn->close();
 }
 ?>
@@ -41,13 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h1>Process Payments</h1>
         <nav>
             <ul>
-                <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
     </header>
     <div class="container">
         <h2>Payments</h2>
+        <?php if ($errorMsg): ?>
+            <div class="error-message"><?php echo htmlspecialchars($errorMsg); ?></div>
+        <?php endif; ?>
+        <?php if ($successMsg): ?>
+            <div class="success-message"><?php echo htmlspecialchars($successMsg); ?></div>
+        <?php endif; ?>
         <form action="process_payments.php" method="post">
             <label for="payment_amount"><i class="fas fa-dollar-sign"></i> Payment Amount</label>
             <input type="number" id="payment_amount" name="payment_amount" step="0.01" required>

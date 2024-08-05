@@ -1,6 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) && $_SESSION['user']['role'] == 'mechanic') {
+if (!isset($_SESSION['user']) && $_SESSION['user']['role'] == 'admin') {
     header('Location: ../employee_admin_login.php');
     exit;
 }
@@ -30,13 +30,14 @@ $conn->close();
 </head>
 <body>
 <div class="sidebar">
-        <h2>Employee Dashboard</h2>
+        <h2>Admin Dashboard</h2>
         <nav>
             <ul>
-                <li><a href="employee_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="manage_attendance.php"><i class="class"></i>Manage Attendance</a></li>
-                <li><a href="manage_jobs.php"><i class="class"></i>View Jobs</a></li>
-                <li><a href="update_job.php"><i class="class"></i>Update Job</a></li>
+                <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="manage_appointments.php"><i class="fas fa-calendar-alt"></i>Manage Appointments</a></li>
+                <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
+                <li><a href="process_payments.php"><i class="fas fa-dollar-sign">Manage Payments</i></a></li>
+                <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
                 <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
@@ -66,7 +67,7 @@ $conn->close();
                 <?php if (!empty($jobs)): ?>
                     <?php foreach ($jobs as $job): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($job['jobId']); ?></td>
+                            <td><?php echo htmlspecialchars($job['job_id']); ?></td>
                             <td><?php echo htmlspecialchars($job['description']); ?></td>
                             <td><?php echo htmlspecialchars($job['status']); ?></td>
                             <td><?php echo htmlspecialchars($job['assigned_to']); ?></td>

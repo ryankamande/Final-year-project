@@ -29,15 +29,21 @@ $conn->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>Manage Stock</h1>
+<div class="sidebar">
+        <h2>Admin Dashboard</h2>
         <nav>
             <ul>
                 <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="manage_appointments.php"><i class="fas fa-calendar-alt"></i>Manage Appointments</a></li>
+                <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
+                <li><a href="process_payments.php"><i class="fas fa-dollar-sign">Manage Payments</i></a></li>
+                <li><a href="manage_stock.php"><i class="fas fa-tasks"></i>Manage Stock</a></li>
+                <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
                 <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </nav>
-    </header>
+    </div>
+   
     <div class="container">
         <h2>Stock</h2>
         <table>

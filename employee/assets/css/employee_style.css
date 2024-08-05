@@ -1,0 +1,70 @@
+/* General body styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    height: 100%;
+    background-color: #444; /* Slightly different color for employees */
+    color: #fff;
+    padding: 15px;
+    position: fixed; /* Fixed position to stay in place */
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow-y: auto; /* Allows scrolling if content overflows */
+}
+
+/* Sidebar heading styles */
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Sidebar navigation styles */
+.sidebar nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar nav ul li a .fas {
+    margin-right: 10px;
+}
+
+.sidebar nav ul li a.logout {
+    color: #ff4b4b;
+}
+
+/* Main content area styles */
+.main-content {
+    margin-left: 250px; /* Offset to account for the fixed sidebar */
+    padding: 20px;
+    width: calc(100% - 150px); /* Adjust width to fill remaining space */
+    height: 100%; /* Ensure it takes the full height */
+    box-sizing: border-box; /* Include padding and border in width/height calculations */
+}
+
+/* Header styles */
+header h2 {
+    margin: 0;
+    text-align: center;
+}
+
+/* Adjust any other styles as needed */

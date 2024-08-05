@@ -1,8 +1,6 @@
 <!-- config.php -->
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+
 //database connection details
 $servername = "localhost";
 $username = "Drexx";
@@ -16,6 +14,4 @@ $conn = mysqli_connect($servername, $username, $password, $dbname);
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
-
-session_start();
 ?>
