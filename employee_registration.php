@@ -5,15 +5,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mobile = $_POST['mobile'];
     $DOB = $_POST['DOB'];
     $type = $_POST['type'];
-    $OThours = 0;
     $address = $_POST['address'];
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $name = $_POST['name'];
-    $EMPID = $_POST['EMPID'];
+    
 
-    $stmt = $conn->prepare("INSERT INTO employee (mobile, DOB, type, OThours, address, username, password, name, EMPID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssisssss", $mobile, $DOB, $type, $OThours, $address, $username, $password, $name, $EMPID);
+    $stmt = $conn->prepare("INSERT INTO employee (mobile, DOB, type, address, username, password, name) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssisss", $mobile, $DOB, $type, $address, $username, $password, $name);
 
     if ($stmt->execute()) {
         echo "Registration successful.";
@@ -23,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt->close();
     $conn->close();
+    // echo "$mobile, $DOB, $type, $address, $username, $password, $name";
 }
 ?>
 
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h1>Employee/Admin Registration</h1>
     </header>
     <div class="container">
-        <form method="post" action="employee_registration.php">
+        <form method="POST" action="employee_registration.php">
             <label for="name"><i class="fas fa-user"></i> Name:</label>
             <input type="text" id="name" name="name" required><br>
             
@@ -63,9 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <label for="password"><i class="fas fa-lock"></i> Password:</label>
             <input type="password" id="password" name="password" required><br>
             
-            <label for="EMPID"><i class="fas fa-id-badge"></i> Employee ID:</label>
-            <input type="text" id="EMPID" name="EMPID" required><br>
-            
+                    
             <button type="submit"><i class="fas fa-user-plus"></i> Register</button>
         </form>
     </div>

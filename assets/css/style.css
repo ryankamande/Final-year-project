@@ -146,3 +146,91 @@ th, td {
 th {
     background-color: #f2f2f2;
 }
+
+
+/* alert message container */
+
+.alert .text {
+    display: block;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 3px;
+    background-color: #d6d8d9;
+    border-color: #c6c8ca;
+  }
+  
+  .alert input {
+    display: none;
+  }
+  
+  /* Styling the success alert */
+  
+  .alert.success .text {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  
+  .alert.success .text,
+  .alert.success {
+    color: #155724;
+  }
+  
+  /* Styling the error alert */
+  
+  .alert.error .text {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }
+  
+  .alert.error .text,
+  .alert.error {
+    color: #721c24;
+  }
+  
+  /* styling the info alert */
+  
+  .alert.info .text {
+    background-color: #cce5ff;
+    border-color: #b8daff;
+  }
+  
+  .alert.info .text,
+  .alert.info {
+   color: #004085;
+  }
+  
+  /* Styling the warning alert */
+  
+  .alert.warning .text {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+  }
+  
+  .alert.warning .text,
+  .alert.warning {
+    color: #856404;
+  }
+  
+
+  .save-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  .delete-btn {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .cancel-btn.close {
+    background-color: #d5d6d8;
+    color: #606266;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  

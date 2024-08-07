@@ -1,12 +1,12 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] == 'admin') {
+if (!isset($_SESSION['user']) && $_SESSION['user']['role'] == 'admin') {
     header('Location: ../employee_admin_login.php');
     exit;
 }
 
 include '../config.php'; 
-include '../functions.php';
+include '../utils.php';
 
 // Fetch all mechanics
 $mechanics = [];
@@ -34,7 +34,7 @@ if ($result->num_rows > 0) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $appointmentId = $_POST['appointment_id'];
     $mechanicId = $_POST['mechanic_id'];
-    $description = sanitizeInput($_POST['description']);
+    $description =  Utils::sanitizeInput($_POST['description']);
 
     $assignJobQuery = "INSERT INTO job (description, status, assigned_to, aid) VALUES (?, 'pending', ?, ?)";
     $stmt = $conn->prepare($assignJobQuery);
@@ -62,12 +62,16 @@ $conn->close();
 <div class="sidebar">
     <h2>Admin Dashboard</h2>
     <nav>
-        <ul>
-            <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
-            <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
-    </nav>
+            <ul>
+                <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="manage_appointments.php"><i class="fas fa-calendar-alt"></i>Manage Appointments</a></li>
+                <li><a href="assign_to.php"><i class="fa fa-briefcase"></i>Assign Mechanic</a></li>
+                <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
+                <li><a href="send_invoice.php"><i class="fas fa-tasks"></i>Billing</a></li>
+                <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
+                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </nav>
 </div>
 <div class="main-content">
     <header>
@@ -89,7 +93,7 @@ $conn->close();
                 <label for="mechanic_id">Assign To Mechanic:</label>
                 <select name="mechanic_id" required>
                     <?php foreach ($mechanics as $mechanic): ?>
-                        <option value="<?php echo $mechanic['id']; ?>"><?php echo htmlspecialchars($mechanic['name']); ?></option>
+                        <option value="<?php echo $mechanic['eid']; ?>"><?php echo ($mechanic['name']); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

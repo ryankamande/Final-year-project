@@ -1,12 +1,12 @@
 <?php
 session_start();
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] == 'admin') {
-    header('Location: ../login.php');
+    header('Location: ../employee_admin_login.php');
     exit;
 }
 
 include '../config.php'; // Include your database connection
-include '../functions.php';
+include '../utils.php';
 
 // Fetch key elements
 $totalAppointmentsTodayQuery = "SELECT COUNT(*) AS total_appointments_today FROM appointment WHERE DATE(date) = CURDATE()";
@@ -37,7 +37,6 @@ $completedTasksResult = $conn->query($completedTasksQuery)->fetch_assoc()['compl
                 <li><a href="manage_appointments.php"><i class="fas fa-calendar-alt"></i>Manage Appointments</a></li>
                 <li><a href="assign_to.php"><i class="fa fa-briefcase"></i>Assign Mechanic</a></li>
                 <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
-                <li><a href="process_payments.php"><i class="fas fa-dollar-sign">Manage Payments</i></a></li>
                 <li><a href="send_invoice.php"><i class="fas fa-tasks"></i>Billing</a></li>
                 <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
                 <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
@@ -81,7 +80,7 @@ $completedTasksResult = $conn->query($completedTasksQuery)->fetch_assoc()['compl
                     <i class="fas fa-check-circle"></i>
                 </div>
                 <div class="card-details">
-                    <h3>Completed Tasks</h3>
+                    <h3>Completed Jobs</h3>
                     <p><?php echo $completedTasksResult; ?></p>
                 </div>
             </div>

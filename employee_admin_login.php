@@ -3,9 +3,9 @@ include 'config.php';
 include 'functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = sanitizeInput($_POST['username']);
-    $password = sanitizeInput($_POST['password']);
-    $role = sanitizeInput($_POST['role']);
+    $username =  Utils::sanitizeInput($_POST['username']);
+    $password =  Utils::sanitizeInput($_POST['password']);
+    $role =  Utils::sanitizeInput($_POST['role']);
 
     $stmt = $conn->prepare("SELECT * FROM employee WHERE username = ? AND type = ?");
     $stmt->bind_param("ss", $username, $role);

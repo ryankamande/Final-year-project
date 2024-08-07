@@ -1,15 +1,15 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] == 'admin') {
-    header('Location: login.php');
+if (!isset($_SESSION['user']) && $_SESSION['user']['role'] == 'admin') {
+    header('Location: ../employee_admin_login.php');
     exit;
 }
 
 include '../config.php';
-include '../functions.php';
+include '../utils.php';
 
 // Fetch all appointments
-$appointmentsQuery = "SELECT APPID, time, date, plateNo FROM appointment";
+$appointmentsQuery = "SELECT aid, time, date, plateNo FROM appointment";
 $result = $conn->query($appointmentsQuery);
 
 $appointments = [];
@@ -34,10 +34,11 @@ $conn->close();
         <h2>Admin Dashboard</h2>
         <nav>
             <ul>
-                <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 <li><a href="manage_appointments.php"><i class="fas fa-calendar-alt"></i>Manage Appointments</a></li>
+                <li><a href="assign_to.php"><i class="fa fa-briefcase"></i>Assign Mechanic</a></li>
                 <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
-                <li><a href="process_payments.php"><i class="fas fa-dollar-sign">Manage Payments</i></a></li>
+                <li><a href="send_invoice.php"><i class="fas fa-tasks"></i>Billing</a></li>
                 <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
                 <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
@@ -62,7 +63,7 @@ $conn->close();
                     <?php if (!empty($appointments)): ?>
                         <?php foreach ($appointments as $appointment): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($appointment['APPID']); ?></td>
+                                <td><?php echo htmlspecialchars($appointment['aid']); ?></td>
                                 <td><?php echo htmlspecialchars($appointment['time']); ?></td>
                                 <td><?php echo htmlspecialchars($appointment['date']); ?></td>
                                 <td><?php echo htmlspecialchars($appointment['plateNo']); ?></td>

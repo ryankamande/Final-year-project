@@ -1,6 +1,6 @@
 <?php
 include 'config.php';
-include 'functions.php';
+include 'utils.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
@@ -11,9 +11,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = mysqli_fetch_assoc($result);
     
     if ($user && password_verify($password, $user['password'])) {
-        session_start();
+        
         $_SESSION['user'] = $user;
-        header('Location: user/dashboard.php');
+        echo "TEST" . $_SESSION['user'];
+        Utils::redirect_to('user/dashboard.php');
     } else {
         echo "Invalid email or password";
     }
