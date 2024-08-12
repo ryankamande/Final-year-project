@@ -18,14 +18,21 @@ if (isset($_POST["register-btn"])){
     
     // // Hashes the password using the BCRYPT algorithm. This provides a secure way to store passwords in the database by making them unreadable and difficult to reverse-engineer.
     
-    $sql = "INSERT INTO customer (name, email, address, plateNo, mobile, password) VALUES ('$name', '$email', '$address', $mobile , '$plateNo', '$password')";
+// Prepare the SQL statement to insert a new customer into the 'customer' table.
+// The statement includes the customer's name, email, address, mobile number, plate number, and password.
+$sql = "INSERT INTO customer (name, email, address, plateNo, mobile, password) VALUES ('$name', '$email', '$address', $mobile , '$plateNo', '$password')";
 
-    if (mysqli_query($conn, $sql)) {
-        header('Location: login.php');
-    } else {
-        echo "Error: " . mysqli_error($conn); 
-    }
-    
+// Execute the SQL query using the database connection ($conn).
+// The mysqli_query() function sends the SQL query to the database for execution.
+if (mysqli_query($conn, $sql)) {
+    // If the query executes successfully, redirect the user to the login page.
+    // This typically happens after successful registration.
+    header('Location: login.php');
+} else {
+    // If the query fails to execute, display an error message.
+    // The mysqli_error() function is used to get a descriptive error message from the database.
+    echo "Error: " . mysqli_error($conn); 
+}
 }
 ?>
 

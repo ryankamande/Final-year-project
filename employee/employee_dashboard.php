@@ -79,7 +79,7 @@ if (!isset($_SESSION['user']) && $_SESSION['user']['role'] == 'mechanic') {
                 <h3>Appointments</h3>
                 <p>5 Upcoming</p>
             </div>
-            <div class="card">>
+            <div class="card">
                 <h3>Tasks</h3>
                 <p>12 In Progress</p>
             </div>

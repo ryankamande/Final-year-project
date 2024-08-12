@@ -195,12 +195,14 @@ unset($_SESSION['success'], $_SESSION['error']);
         }
     }
 }
+//it wont be displayed by default when you load the page
 
-
+//Hides the modal to make the element not to be displayed by using css style none
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = "none";
     }
 
+    // Hides the modal to make the element not to be displayed by using css style none
     window.onclick = function(event) {
         if (event.target.classList.contains('modal')) {
             event.target.style.display = "none";

@@ -16,40 +16,135 @@ include '../../config.php';
 // If not set, default to empty string
 $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : '';
 $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : '';
-$appointmentStatus = isset($_POST['appointment_status']) ? $_POST['appointment_status'] : '';
+$jobStatus = isset($_POST['appointment_status']) ? $_POST['appointment_status'] : '';
 
-// Prepare SQL query for appointments with date range
+// Prepare SQL query for Jobswith date range
 // Add status filter if appointmentStatus is set
-$appointmentQuery = "SELECT * FROM appointment WHERE date BETWEEN ? AND ?" . ($appointmentStatus ? " AND status = ?" : "");
+$jobQuery = "SELECT * FROM job WHERE date BETWEEN ? AND ?" . ($jobStatus ? " AND status = ?" : "");
 
 // Prepare the SQL statement
-$appointmentStmt = $conn->prepare($appointmentQuery);
+$jobStmt = $conn->prepare($jobQuery);
 
 // Bind parameters to the prepared statement
-if ($appointmentStatus) {
+if ($jobStatus) {
     // If status filter is applied, bind three parameters
-    $appointmentStmt->bind_param("sss", $startDate, $endDate, $appointmentStatus);
+    $jobStmt->bind_param("sss", $startDate, $endDate, $jobStatus);
 } else {
     // If no status filter, bind only date range parameters
-    $appointmentStmt->bind_param("ss", $startDate, $endDate);
+    $jobStmt->bind_param("ss", $startDate, $endDate);
 }
 
 // Execute the prepared statement
-$appointmentStmt->execute();
+$jobStmt->execute();
 
 // Get the result set from the executed statement
-$appointmentsResult = $appointmentStmt->get_result();
+$jobsResult = $jobStmt->get_result();
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Appointments Report</title>
+    <title>Jobs Report</title>
     <!-- Link to external CSS file for admin styles -->
     <link rel="stylesheet" type="text/css" href="../assets/css/admin_style.css">
     <style>
-        
-        
+     /* General body styles */
+     body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            position: fixed; /* Fixed position to stay in place */
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto; /* Allows scrolling if content overflows */
+        }
+
+        /* Sidebar heading styles */
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Sidebar navigation styles */
+        .sidebar nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar nav ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav ul li a .fas {
+            margin-right: 10px;
+        }
+
+        .sidebar nav ul li a.logout {
+            color: #ff4b4b;
+        }
+
+        /* Main content area styles */
+        .main-content {
+            margin-left: 260px; /* Offset to account for the fixed sidebar */
+            padding: 20px;
+            width: calc(100% - 260px); /* Adjust width to fill remaining space */
+            height: 100%; /* Ensure it takes the full height */
+            box-sizing: border-box; /* Include padding and border in width/height calculations */
+        }
+
+        /* Header styles */
+        .navbar {
+            margin-bottom: 20px;
+            background-color: #007bff;
+            padding: 10px;
+            color: white;
+            text-align: center;
+        }
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .navbar a.active {
+            text-decoration: underline;
+        }
+        .filter-section, .report-section {
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
@@ -70,12 +165,12 @@ $appointmentsResult = $appointmentStmt->get_result();
     <div class="main-content">
         <!-- Navigation bar for different report types -->
         <div class="navbar">
-            <a href="report_appointments.php" class="active">Appointments Report</a>
-            <a href="report_jobs.php">Jobs Report</a>
+            <a href="report_appointments.php">Appointment Report</a>
+            <a href="report_jobs.php" class="active">Jobs Report</a>
             <a href="report_payments.php">Payments Report</a>
         </div>
 
-        <!-- Filter form for appointments -->
+        <!-- Filter form for Jobs-->
         <div class="filter-section">
             <form method="post">
                 <!-- Date range inputs -->
@@ -88,23 +183,23 @@ $appointmentsResult = $appointmentStmt->get_result();
                 <label for="appointment_status">Status:</label>
                 <select id="appointment_status" name="appointment_status">
                     <option value="">All</option>
-                    <option value="completed" <?php echo $appointmentStatus == 'completed' ? 'selected' : ''; ?>>Completed</option>
-                    <option value="rescheduled" <?php echo $appointmentStatus == 'rescheduled' ? 'selected' : ''; ?>>Rescheduled</option>
-                    <option value="canceled" <?php echo $appointmentStatus == 'canceled' ? 'selected' : ''; ?>>Canceled</option>
+                    <option value="completed" <?php echo $jobStatus == 'completed' ? 'selected' : ''; ?>>Completed</option>
+                    <option value="rescheduled" <?php echo $jobStatus == 'rescheduled' ? 'selected' : ''; ?>>Rescheduled</option>
+                    <option value="canceled" <?php echo $jobStatus == 'canceled' ? 'selected' : ''; ?>>Canceled</option>
                 </select>
                 <button type="submit"> Apply Filters</button>
             </form>
         </div>
 
-        <!-- Appointments report table -->
+        <!-- Jobsreport table -->
         <div class="report-section">
-            <h2>Appointments Report</h2>
+            <h2>JobsReport</h2>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Date</th>
-                        <th>Time</th>
+                        <th>Assigned To</th>
                         <th>Plate Number</th>
                         <th>Status</th>
                     </tr>
@@ -112,21 +207,21 @@ $appointmentsResult = $appointmentStmt->get_result();
                 <tbody>
                     <?php
                     // Check if there are any appointments
-                    if ($appointmentsResult->num_rows > 0) {
+                    if ($jobsResult->num_rows > 0) {
                         // Loop through each appointment and display its details
-                        while ($row = $appointmentsResult->fetch_assoc()) {
+                        while ($row = $jobsResult->fetch_assoc()) {
                             echo "<tr>";
                             // Output each field, using htmlspecialchars to prevent XSS attacks
-                            echo "<td>" . htmlspecialchars($row['aid']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['jobId']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['date']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['time']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['plateNo']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['assigned_to']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['description']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['status']) . "</td>";
                             echo "</tr>";
                         }
                     } else {
-                        // If no appointments found, display a message
-                        echo "<tr><td colspan='5'>No appointments found</td></tr>";
+                        // If no Jobsfound, display a message
+                        echo "<tr><td colspan='5'>No Jobsfound</td></tr>";
                     }
                     ?>
                 </tbody>
@@ -136,7 +231,7 @@ $appointmentsResult = $appointmentStmt->get_result();
 
     <?php
     // Close the prepared statement
-    $appointmentStmt->close();
+    $jobsResult->close();
     // Close the database connection
     $conn->close();
     ?>

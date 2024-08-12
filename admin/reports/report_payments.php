@@ -181,11 +181,11 @@ $paymentsResult = $paymentStmt->get_result();
                     if ($paymentsResult->num_rows > 0) {
                         while ($row = $paymentsResult->fetch_assoc()) {
                             echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row['paymentId']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['payId']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['total']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['date']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['status']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['CUSID']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['cid']) . "</td>";
                             echo "</tr>";
                         }
                     } else {

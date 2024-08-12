@@ -31,7 +31,103 @@ $appointmentsResult = $appointmentStmt->get_result();
     <title>Appointments Report</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/admin_style.css">
     <style>
-        
+    /* General body styles */
+    body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            height: 100%;
+            background-color: #333;
+            color: #fff;
+            padding: 15px;
+            position: fixed; /* Fixed position to stay in place */
+            top: 0;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto; /* Allows scrolling if content overflows */
+        }
+
+        /* Sidebar heading styles */
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Sidebar navigation styles */
+        .sidebar nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar nav ul li {
+            margin: 15px 0;
+        }
+
+        .sidebar nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar nav ul li a .fas {
+            margin-right: 10px;
+        }
+
+        .sidebar nav ul li a.logout {
+            color: #ff4b4b;
+        }
+
+        /* Main content area styles */
+        .main-content {
+            margin-left: 260px; /* Offset to account for the fixed sidebar */
+            padding: 20px;
+            width: calc(100% - 260px); /* Adjust width to fill remaining space */
+            height: 100%; /* Ensure it takes the full height */
+            box-sizing: border-box; /* Include padding and border in width/height calculations */
+        }
+
+        /* Header styles */
+        .navbar {
+            margin-bottom: 20px;
+            background-color: #007bff;
+            padding: 10px;
+            color: white;
+            text-align: center;
+        }
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+        .navbar a.active {
+            text-decoration: underline;
+        }
+        .filter-section, .report-section {
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>

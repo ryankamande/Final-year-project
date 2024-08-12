@@ -1,58 +1,61 @@
 <?php
-session_start();
+session_start(); // Start a new session or resume the existing session
+
+// Check if the user is logged in and if the user is an admin
+// If the user is not logged in or is not an admin, redirect them to the login page
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] == 'admin') {
-    header('Location: ../employee_admin_login.php');
-    exit;
+    header('Location: ../employee_admin_login.php'); // Redirect to the login page
+    exit; // Stop further execution
 }
 
-include '../config.php';
+include '../config.php'; // Include the database configuration file
 
-// Fetch filter values
+// Fetch filter values from the form submission, or set to an empty string if not set
 $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : '';
 $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : '';
 $appointmentStatus = isset($_POST['appointment_status']) ? $_POST['appointment_status'] : '';
 $jobStatus = isset($_POST['job_status']) ? $_POST['job_status'] : '';
 $paymentStatus = isset($_POST['payment_status']) ? $_POST['payment_status'] : '';
 
-// Appointment Report
+// Fetch the appointment data from the database based on the filter criteria
 $appointmentQuery = "SELECT * FROM appointment WHERE date BETWEEN ? AND ?" . ($appointmentStatus ? " AND status = ?" : "");
-$appointmentStmt = $conn->prepare($appointmentQuery);
+$appointmentStmt = $conn->prepare($appointmentQuery); // Prepare the SQL query
 if ($appointmentStatus) {
-    $appointmentStmt->bind_param("sss", $startDate, $endDate, $appointmentStatus);
+    $appointmentStmt->bind_param("sss", $startDate, $endDate, $appointmentStatus); // Bind parameters if status is provided
 } else {
-    $appointmentStmt->bind_param("ss", $startDate, $endDate);
+    $appointmentStmt->bind_param("ss", $startDate, $endDate); // Bind parameters without status
 }
-$appointmentStmt->execute();
-$appointmentsResult = $appointmentStmt->get_result();
+$appointmentStmt->execute(); // Execute the query
+$appointmentsResult = $appointmentStmt->get_result(); // Get the result set
 
-// Job Report
+// Fetch the job data from the database based on the filter criteria
 $jobQuery = "SELECT * FROM job WHERE date BETWEEN ? AND ?" . ($jobStatus ? " AND status = ?" : "");
-$jobStmt = $conn->prepare($jobQuery);
+$jobStmt = $conn->prepare($jobQuery); // Prepare the SQL query
 if ($jobStatus) {
-    $jobStmt->bind_param("sss", $startDate, $endDate, $jobStatus);
+    $jobStmt->bind_param("sss", $startDate, $endDate, $jobStatus); // Bind parameters if status is provided
 } else {
-    $jobStmt->bind_param("ss", $startDate, $endDate);
+    $jobStmt->bind_param("ss", $startDate, $endDate); // Bind parameters without status
 }
-$jobStmt->execute();
-$jobsResult = $jobStmt->get_result();
+$jobStmt->execute(); // Execute the query
+$jobsResult = $jobStmt->get_result(); // Get the result set
 
-// Payment Report
+// Fetch the payment data from the database based on the filter criteria
 $paymentQuery = "SELECT * FROM payment WHERE date BETWEEN ? AND ?" . ($paymentStatus ? " AND status = ?" : "");
-$paymentStmt = $conn->prepare($paymentQuery);
+$paymentStmt = $conn->prepare($paymentQuery); // Prepare the SQL query
 if ($paymentStatus) {
-    $paymentStmt->bind_param("sss", $startDate, $endDate, $paymentStatus);
+    $paymentStmt->bind_param("sss", $startDate, $endDate, $paymentStatus); // Bind parameters if status is provided
 } else {
-    $paymentStmt->bind_param("ss", $startDate, $endDate);
+    $paymentStmt->bind_param("ss", $startDate, $endDate); // Bind parameters without status
 }
-$paymentStmt->execute();
-$paymentsResult = $paymentStmt->get_result();
+$paymentStmt->execute(); // Execute the query
+$paymentsResult = $paymentStmt->get_result(); // Get the result set
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Admin Reports</title>
-    <link rel="stylesheet" type="text/css" href="../assets/css/admin_style.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/admin_style.css"> <!-- Link to the admin style CSS file -->
     <style>
         /* General body styles */
         body {
@@ -154,25 +157,30 @@ $paymentsResult = $paymentStmt->get_result();
     </style>
 </head>
 <body>
+    <!-- Sidebar for navigation -->
     <div class="sidebar">
         <h2>Admin Dashboard</h2>
         <nav>
             <ul>
                 <li><a href="admin_dashboard.php">Dashboard</a></li>
-                <li><a href="create_appointment.php"> Create Appointment</a></li>
-                <li><a href="view_appointment.php"> View Appointments</a></li>
-                <li><a href="../logout.php" class="logout"> Logout</a></li>
+                <li><a href="create_appointment.php">Create Appointment</a></li>
+                <li><a href="view_appointment.php">View Appointments</a></li>
+                <li><a href="../logout.php" class="logout">Logout</a></li>
             </ul>
         </nav>
     </div>
 
+    <!-- Main content area -->
     <div class="main-content">
+        <!-- Navigation bar for reports -->
         <div class="navbar">
+            <!-- Links to different report sections with active class based on the selected report -->
             <a href="reports/report_appointments.php" class="<?php echo !isset($_GET['report']) || $_GET['report'] == 'appointments' ? 'active' : ''; ?>">Appointments Report</a>
             <a href="reports/report_jobs.php" class="<?php echo isset($_GET['report']) && $_GET['report'] == 'jobs' ? 'active' : ''; ?>">Jobs Report</a>
             <a href="reports/report_payments.php" class="<?php echo isset($_GET['report']) && $_GET['report'] == 'payments' ? 'active' : ''; ?>">Payments Report</a>
         </div>
 
+        <!-- Filter section for selecting date range and applying filters -->
         <div class="filter-section">
             <form method="post">
                 <label for="start_date">Start Date:</label>
@@ -183,11 +191,14 @@ $paymentsResult = $paymentStmt->get_result();
             </form>
         </div>
 
+        <!-- Report section based on the selected report type -->
         <div class="report-section">
             <?php
+            // Appointments Report
             if (!isset($_GET['report']) || $_GET['report'] == 'appointments') {
                 echo '<h2>Appointments Report</h2>';
                 ?>
+                <!-- Form to filter appointments by status -->
                 <form method="post">
                     <label for="appointment_status">Status:</label>
                     <select id="appointment_status" name="appointment_status">
@@ -198,6 +209,7 @@ $paymentsResult = $paymentStmt->get_result();
                     </select>
                     <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
                 </form>
+                <!-- Table to display filtered appointments -->
                 <table>
                     <thead>
                         <tr>
@@ -210,109 +222,100 @@ $paymentsResult = $paymentStmt->get_result();
                     </thead>
                     <tbody>
                         <?php
-                        if ($appointmentsResult->num_rows > 0) {
-                            while ($row = $appointmentsResult->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['aid']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['time']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['plateNo']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['status']) . "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='5'>No appointments found</td></tr>";
+                        while ($row = $appointmentsResult->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['aid'] . "</td>";
+                            echo "<td>" . $row['date'] . "</td>";
+                            echo "<td>" . $row['time'] . "</td>";
+                            echo "<td>" . $row['plate_number'] . "</td>";
+                            echo "<td>" . $row['status'] . "</td>";
+                            echo "</tr>";
                         }
                         ?>
                     </tbody>
                 </table>
                 <?php
-            } elseif ($_GET['report'] == 'jobs') {
+            }
+
+            // Jobs Report
+            if (isset($_GET['report']) && $_GET['report'] == 'jobs') {
                 echo '<h2>Jobs Report</h2>';
                 ?>
+                <!-- Form to filter jobs by status -->
                 <form method="post">
                     <label for="job_status">Status:</label>
                     <select id="job_status" name="job_status">
                         <option value="">All</option>
-                        <option value="in progress" <?php echo $jobStatus == 'in progress' ? 'selected' : ''; ?>>In Progress</option>
-                        <option value="completed" <?php echo $jobStatus == 'completed' ? 'selected' : ''; ?>>Completed</option>
                         <option value="pending" <?php echo $jobStatus == 'pending' ? 'selected' : ''; ?>>Pending</option>
+                        <option value="in_progress" <?php echo $jobStatus == 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
+                        <option value="completed" <?php echo $jobStatus == 'completed' ? 'selected' : ''; ?>>Completed</option>
                     </select>
-                    <button type="submit"> Apply Filters</button>
+                    <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
                 </form>
+                <!-- Table to display filtered jobs -->
                 <table>
                     <thead>
                         <tr>
-                            <th>Job ID</th>
-                            <th>Description</th>
-                            <th>Estimated Time</th>
-                            <th>Total Time Spent</th>
-                            <th>Status</th>
-                            <th>Vehicle Model</th>
-                            <th>Vehicle Type</th>
-                            <th>Service Type</th>
+                            <th>ID</th>
                             <th>Date</th>
+                            <th>Plate Number</th>
+                            <th>Description</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        if ($jobsResult->num_rows > 0) {
-                            while ($row = $jobsResult->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['jobId']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['timeEstimated']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['totalTimeSpent']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['status']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vehicle_model']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['vehicle_type']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['service_type']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='8'>No jobs found</td></tr>";
+                        while ($row = $jobsResult->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['jid'] . "</td>";
+                            echo "<td>" . $row['date'] . "</td>";
+                            echo "<td>" . $row['plate_number'] . "</td>";
+                            echo "<td>" . $row['description'] . "</td>";
+                            echo "<td>" . $row['status'] . "</td>";
+                            echo "</tr>";
                         }
                         ?>
                     </tbody>
                 </table>
                 <?php
-            } elseif ($_GET['report'] == 'payments') {
+            }
+
+            // Payments Report
+            if (isset($_GET['report']) && $_GET['report'] == 'payments') {
                 echo '<h2>Payments Report</h2>';
                 ?>
+                <!-- Form to filter payments by status -->
                 <form method="post">
                     <label for="payment_status">Status:</label>
                     <select id="payment_status" name="payment_status">
                         <option value="">All</option>
-                        <option value="paid" <?php echo $paymentStatus == 'paid' ? 'selected' : ''; ?>>Paid</option>
                         <option value="pending" <?php echo $paymentStatus == 'pending' ? 'selected' : ''; ?>>Pending</option>
+                        <option value="paid" <?php echo $paymentStatus == 'paid' ? 'selected' : ''; ?>>Paid</option>
                     </select>
                     <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
                 </form>
+                <!-- Table to display filtered payments -->
                 <table>
                     <thead>
                         <tr>
-                            <th>Payment ID</th>
-                            <th>Amount</th>
+                            <th>ID</th>
                             <th>Date</th>
+                            <th>Amount</th>
+                            <th>Method</th>
                             <th>Status</th>
-                            <th>Customer ID</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        if ($paymentsResult->num_rows > 0) {
-                            while ($row = $paymentsResult->fetch_assoc()) {
-                                echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['paymentId']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['date']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['status']) . "</td>";
-                                echo "<td>" . htmlspecialchars($row['CUSID']) . "</td>";
-                                echo "</tr>";
-                            }
-                        } else {
-                            echo "<tr><td colspan='5'>No payments found</td></tr>";
+                        //loop results of payment to fill the table
+                        while ($row = $paymentsResult->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['pid'] . "</td>";
+                            echo "<td>" . $row['date'] . "</td>";
+                            echo "<td>" . $row['amount'] . "</td>";
+                            echo "<td>" . $row['method'] . "</td>";
+                            echo "<td>" . $row['status'] . "</td>";
+                            echo "</tr>";
                         }
                         ?>
                     </tbody>
@@ -322,13 +325,5 @@ $paymentsResult = $paymentStmt->get_result();
             ?>
         </div>
     </div>
-
-    <?php
-    // Close statements and connection
-    $appointmentStmt->close();
-    $jobStmt->close();
-    $paymentStmt->close();
-    $conn->close();
-    ?>
 </body>
 </html>
