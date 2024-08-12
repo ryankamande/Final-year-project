@@ -1,135 +1,59 @@
 <?php
+// Start a new or resume an existing session
 session_start();
+
+// Check if user is logged in and is an admin
+// If not, redirect to the login page
 if (!isset($_SESSION['user']) || $_SESSION['user']['role'] == 'admin') {
     header('Location: ../../employee_admin_login.php');
     exit;
 }
 
+// Include database configuration file
 include '../../config.php';
 
-// Fetch filter values
+// Fetch filter values from POST request
+// If not set, default to empty string
 $startDate = isset($_POST['start_date']) ? $_POST['start_date'] : '';
 $endDate = isset($_POST['end_date']) ? $_POST['end_date'] : '';
-$jobStatus = isset($_POST['job_status']) ? $_POST['job_status'] : '';
+$appointmentStatus = isset($_POST['appointment_status']) ? $_POST['appointment_status'] : '';
 
-// Job Report
-$jobQuery = "SELECT * FROM job WHERE date BETWEEN ? AND ?" . ($jobStatus ? " AND status = ?" : "");
-$jobStmt = $conn->prepare($jobQuery);
-if ($jobStatus) {
-    $jobStmt->bind_param("sss", $startDate, $endDate, $jobStatus);
+// Prepare SQL query for appointments with date range
+// Add status filter if appointmentStatus is set
+$appointmentQuery = "SELECT * FROM appointment WHERE date BETWEEN ? AND ?" . ($appointmentStatus ? " AND status = ?" : "");
+
+// Prepare the SQL statement
+$appointmentStmt = $conn->prepare($appointmentQuery);
+
+// Bind parameters to the prepared statement
+if ($appointmentStatus) {
+    // If status filter is applied, bind three parameters
+    $appointmentStmt->bind_param("sss", $startDate, $endDate, $appointmentStatus);
 } else {
-    $jobStmt->bind_param("ss", $startDate, $endDate);
+    // If no status filter, bind only date range parameters
+    $appointmentStmt->bind_param("ss", $startDate, $endDate);
 }
-$jobStmt->execute();
-$jobsResult = $jobStmt->get_result();
+
+// Execute the prepared statement
+$appointmentStmt->execute();
+
+// Get the result set from the executed statement
+$appointmentsResult = $appointmentStmt->get_result();
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Jobs Report</title>
+    <title>Appointments Report</title>
+    <!-- Link to external CSS file for admin styles -->
     <link rel="stylesheet" type="text/css" href="../assets/css/admin_style.css">
     <style>
-        /* General body styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-
-        /* Sidebar styles */
-        .sidebar {
-            width: 250px;
-            height: 100%;
-            background-color: #333;
-            color: #fff;
-            padding: 15px;
-            position: fixed; /* Fixed position to stay in place */
-            top: 0;
-            left: 0;
-            bottom: 0;
-            overflow-y: auto; /* Allows scrolling if content overflows */
-        }
-
-        /* Sidebar heading styles */
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* Sidebar navigation styles */
-        .sidebar nav ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .sidebar nav ul li {
-            margin: 15px 0;
-        }
-
-        .sidebar nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-        }
-
-        .sidebar nav ul li a .fas {
-            margin-right: 10px;
-        }
-
-        .sidebar nav ul li a.logout {
-            color: #ff4b4b;
-        }
-
-        /* Main content area styles */
-        .main-content {
-            margin-left: 260px; /* Offset to account for the fixed sidebar */
-            padding: 20px;
-            width: calc(100% - 260px); /* Adjust width to fill remaining space */
-            height: 100%; /* Ensure it takes the full height */
-            box-sizing: border-box; /* Include padding and border in width/height calculations */
-        }
-
-        /* Header styles */
-        .navbar {
-            margin-bottom: 20px;
-            background-color: #007bff;
-            padding: 10px;
-            color: white;
-            text-align: center;
-        }
-        .navbar a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-        }
-        .navbar a.active {
-            text-decoration: underline;
-        }
-        .filter-section, .report-section {
-            margin: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
+        
+        
     </style>
 </head>
 <body>
+    <!-- Sidebar navigation menu -->
     <div class="sidebar">
         <h2>Admin Dashboard</h2>
         <nav>
@@ -142,62 +66,67 @@ $jobsResult = $jobStmt->get_result();
         </nav>
     </div>
 
+    <!-- Main content area -->
     <div class="main-content">
+        <!-- Navigation bar for different report types -->
         <div class="navbar">
-            <a href="report_appointments.php">Appointments Report</a>
-            <a href="report_jobs.php" class="active">Jobs Report</a>
+            <a href="report_appointments.php" class="active">Appointments Report</a>
+            <a href="report_jobs.php">Jobs Report</a>
             <a href="report_payments.php">Payments Report</a>
         </div>
 
+        <!-- Filter form for appointments -->
         <div class="filter-section">
             <form method="post">
+                <!-- Date range inputs -->
                 <label for="start_date">Start Date:</label>
                 <input type="date" id="start_date" name="start_date" value="<?php echo htmlspecialchars($startDate); ?>">
                 <label for="end_date">End Date:</label>
                 <input type="date" id="end_date" name="end_date" value="<?php echo htmlspecialchars($endDate); ?>">
-                <label for="job_status">Status:</label>
-                <select id="job_status" name="job_status">
+                
+                <!-- Appointment status dropdown -->
+                <label for="appointment_status">Status:</label>
+                <select id="appointment_status" name="appointment_status">
                     <option value="">All</option>
-                    <option value="in progress" <?php echo $jobStatus == 'in progress' ? 'selected' : ''; ?>>In Progress</option>
-                    <option value="completed" <?php echo $jobStatus == 'completed' ? 'selected' : ''; ?>>Completed</option>
-                    <option value="pending" <?php echo $jobStatus == 'pending' ? 'selected' : ''; ?>>Pending</option>
+                    <option value="completed" <?php echo $appointmentStatus == 'completed' ? 'selected' : ''; ?>>Completed</option>
+                    <option value="rescheduled" <?php echo $appointmentStatus == 'rescheduled' ? 'selected' : ''; ?>>Rescheduled</option>
+                    <option value="canceled" <?php echo $appointmentStatus == 'canceled' ? 'selected' : ''; ?>>Canceled</option>
                 </select>
                 <button type="submit"> Apply Filters</button>
             </form>
         </div>
 
+        <!-- Appointments report table -->
         <div class="report-section">
-            <h2>Jobs Report</h2>
+            <h2>Appointments Report</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Job ID</th>
-                        <th>Description</th>
-                        <th>Estimated Time</th>
-                        <th>Total Time Spent</th>
-                        <th>Status</th>
-                        <th>Vehicle Make</th>
-                        <th>Vehicle Model</th>
+                        <th>ID</th>
                         <th>Date</th>
+                        <th>Time</th>
+                        <th>Plate Number</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    if ($jobsResult->num_rows > 0) {
-                        while ($row = $jobsResult->fetch_assoc()) {
+                    // Check if there are any appointments
+                    if ($appointmentsResult->num_rows > 0) {
+                        // Loop through each appointment and display its details
+                        while ($row = $appointmentsResult->fetch_assoc()) {
                             echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row['jobId']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['timeEstimated']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['totalTimeSpent']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['status']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['vehicle_model']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['vehicle_type']) . "</td>";
+                            // Output each field, using htmlspecialchars to prevent XSS attacks
+                            echo "<td>" . htmlspecialchars($row['aid']) . "</td>";
                             echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['time']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['plateNo']) . "</td>";
+                            echo "<td>" . htmlspecialchars($row['status']) . "</td>";
                             echo "</tr>";
                         }
                     } else {
-                        echo "<tr><td colspan='8'>No jobs found</td></tr>";
+                        // If no appointments found, display a message
+                        echo "<tr><td colspan='5'>No appointments found</td></tr>";
                     }
                     ?>
                 </tbody>
@@ -206,8 +135,9 @@ $jobsResult = $jobStmt->get_result();
     </div>
 
     <?php
-    // Close statements and connection
-    $jobStmt->close();
+    // Close the prepared statement
+    $appointmentStmt->close();
+    // Close the database connection
     $conn->close();
     ?>
 </body>

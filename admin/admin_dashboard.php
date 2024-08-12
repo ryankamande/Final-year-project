@@ -8,10 +8,11 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['role'] == 'admin') {
 include '../config.php'; // Include your database connection
 include '../utils.php';
 
-// Fetch key elements
+// counting appointments according to the current date
 $totalAppointmentsTodayQuery = "SELECT COUNT(*) AS total_appointments_today FROM appointment WHERE DATE(date) = CURDATE()";
 $totalAppointmentsTodayResult = $conn->query($totalAppointmentsTodayQuery)->fetch_assoc()['total_appointments_today'];
 
+// counting customers 
 $totalUsersQuery = "SELECT COUNT(*) AS total_users FROM customer";
 $totalUsersResult = $conn->query($totalUsersQuery)->fetch_assoc()['total_users'];
 

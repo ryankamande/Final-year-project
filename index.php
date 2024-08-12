@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garage Management System</title>
+    <title>HMS Garage Management System</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,7 +86,7 @@
             <a href="register.php">Register</a>
         </nav>
         <header class="header">
-            <h1>Garage Management System</h1>
+            <h1>HMS Garage Management System</h1>
         </header>
         <main class="content">
             <h2>Welcome to the Garage Management System</h2>
