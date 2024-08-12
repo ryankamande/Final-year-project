@@ -26,20 +26,19 @@ $conn->close();
 <head>
     <title>Manage Jobs</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
 <div class="sidebar">
         <h2>Admin Dashboard</h2>
         <nav>
             <ul>
-                <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="manage_appointments.php"><i class="fas fa-calendar-alt"></i>Manage Appointments</a></li>
-                <li><a href="assign_to.php"><i class="fa fa-briefcase"></i>Assign Mechanic</a></li>
-                <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
-                <li><a href="send_invoice.php"><i class="fas fa-tasks"></i>Billing</a></li>
-                <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="admin_dashboard.php"> Dashboard</a></li>
+                <li><a href="manage_appointments.php">Manage Appointments</a></li>
+                <li><a href="assign_to.php">Assign Mechanic</a></li>
+                <li><a href="manage_jobs.php"> Manage Jobs</a></li>
+                <li><a href="send_invoice.php">Billing</a></li>
+                <li><a href="reports.php"> Reports</a></li>
+                <li><a href="../logout.php" class="logout"> Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -47,8 +46,8 @@ $conn->close();
         <h1>Manage Jobs</h1>
         <nav>
             <ul>
-                <li><a href="employee_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="employee_dashboard.php"> Dashboard</a></li>
+                <li><a href="../logout.php" class="logout"> Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -57,11 +56,11 @@ $conn->close();
         <table>
             <thead>
                 <tr>
-                    <th>Job ID <i class="fas fa-id-badge"></i></th>
-                    <th>Description <i class="fas fa-file-alt"></i></th>
-                    <th>Status <i class="fas fa-tasks"></i></th>
-                    <th>Assigned To <i class="fas fa-user"></i></th>
-                    <th>Actions <i class="fas fa-cogs"></i></th>
+                    <th>Job ID </th>
+                    <th>Description </th>
+                    <th>Status </th>
+                    <th>Assigned To </th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -72,10 +71,7 @@ $conn->close();
                             <td><?php echo htmlspecialchars($job['description']); ?></td>
                             <td><?php echo htmlspecialchars($job['status']); ?></td>
                             <td><?php echo htmlspecialchars($job['assigned_to']); ?></td>
-                            <td>
-                                <a href="edit_job.php?id=<?php echo $job['job_id']; ?>"><i class="fas fa-edit"></i> Edit</a>
-                                <a href="delete_job.php?id=<?php echo $job['job_id']; ?>" onclick="return confirm('Are you sure?');"><i class="fas fa-trash"></i> Delete</a>
-                            </td>
+                            
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>

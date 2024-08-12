@@ -29,7 +29,6 @@ $appointmentsResult = $appointmentStmt->get_result();
 <head>
     <title>Appointments Report</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/admin_style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General body styles */
         body {
@@ -135,10 +134,10 @@ $appointmentsResult = $appointmentStmt->get_result();
         <h2>Admin Dashboard</h2>
         <nav>
             <ul>
-                <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="create_appointment.php"><i class="fas fa-calendar-plus"></i> Create Appointment</a></li>
-                <li><a href="view_appointment.php"><i class="fas fa-calendar-check"></i> View Appointments</a></li>
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="../admin_dashboard.php"> Dashboard</a></li>
+                <li><a href="../create_appointment.php"> Create Appointment</a></li>
+                <li><a href="../view_appointment.php"> View Appointments</a></li>
+                <li><a href="../../logout.php" class="logout"> Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -163,7 +162,7 @@ $appointmentsResult = $appointmentStmt->get_result();
                     <option value="rescheduled" <?php echo $appointmentStatus == 'rescheduled' ? 'selected' : ''; ?>>Rescheduled</option>
                     <option value="canceled" <?php echo $appointmentStatus == 'canceled' ? 'selected' : ''; ?>>Canceled</option>
                 </select>
-                <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
+                <button type="submit"> Apply Filters</button>
             </form>
         </div>
 

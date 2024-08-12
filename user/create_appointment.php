@@ -17,14 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $time = $_POST['time'];
     $date = $_POST['date'];
     $plateNo = $_POST['plateNo'];
-    // echo "$time, $date, $plateNo";
+    $make=$_POST['make'];
+    $model=$_POST['model'];
+    $service_type = $_POST['service_type'];
+
+ 
     // Start a transaction
     $conn->begin_transaction();
 
     try {
         // Insert the appointment
-        $stmt = $conn->prepare("INSERT INTO appointment (time, date, plateNo, cid) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("sssi", $time, $date, $plateNo, $_SESSION['user']['cid']);
+        $stmt = $conn->prepare("INSERT INTO appointment (time, date, plateNo, make, model, cid, service_type) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssis", $time, $date, $plateNo, $make, $model,  $_SESSION['user']['cid'],$service_type);
         $stmt->execute();
         $stmt->close();
 
@@ -56,10 +60,10 @@ unset($_SESSION['success'], $_SESSION['error']);
 <head>
     <title>Create Appointment</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-<body><div class="sidebar">
+<body>
+    <div class="sidebar">
         <h2>User Dashboard</h2>
         <nav>
             <ul>
@@ -77,22 +81,44 @@ unset($_SESSION['success'], $_SESSION['error']);
         </header>
     <div class="class container">   
     <form action="create_appointment.php" method="post">
-       
-        <div>
-            <label for="time">Time:</label>
-            <input type="time" id="time" name="time" required>
-        </div>
+    <div>
+        <label for="time">Time:</label>
+        <input type="text" id="time" name="time" placeholder="HH:MM" />
+    </div>
 
-        <div>
-            <label for="date">Date:</label>
-            <input type="date" id="date" name="date" required>
-        </div>
-        <div>
-            <label for="plateNo">Plate Number:</label>
-            <input type="text" id="plateNo" name="plateNo" required>
-        </div>
-        <button type="submit">Create Appointment</button>
-    </form>
+    <div>
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date">
+    </div>
+
+    <div>
+        <label for="make">Vehicle make:</label>
+        <input type="text" id="make" name="make">
+    </div>
+
+    <div>
+        <label for="model">Vehicle model:</label>
+        <input type="text" id="model" name="model">
+    </div>
+
+    <div>
+        <label for="plateNo">Plate Number:</label>
+        <input type="text" id="plateNo" name="plateNo">
+    </div>
+
+    <div>
+        <label for="service_type">Service Type:</label>
+        <select id="service_type" name="service_type">
+            <option value="Routine Maintenance">Routine Maintenance</option>
+            <option value="Engine Diagnostics">Engine Diagnostics</option>
+            <option value="Brake Service">Brake Service</option>
+            <option value="Transmission Repair">Transmission Repair</option>
+            <option value="Custom Modifications">Custom Modifications</option>
+        </select>
+    </div>
+
+    <button type="submit">Create Appointment</button>
+</form>
     </div>
     </div> 
 </body>

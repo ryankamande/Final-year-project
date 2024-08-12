@@ -16,20 +16,19 @@ $result = $conn->query($query);
 <head>
     <title>Manage Employees</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <header>
         <h1>Manage Employees</h1>
         <nav>
             <ul>
-                <li><a href="admin_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="manage_appointments.php"><i class="fas fa-calendar-alt"></i>Manage Appointments</a></li>
-                <li><a href="assign_to.php"><i class="fa fa-briefcase"></i>Assign Mechanic</a></li>
-                <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> Manage Jobs</a></li>
-                <li><a href="send_invoice.php"><i class="fas fa-tasks"></i>Billing</a></li>
-                <li><a href="reports.php"><i class="fas fa-file-alt"></i> Reports</a></li>
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="admin_dashboard.php"> Dashboard</a></li>
+                <li><a href="manage_appointments.php">Manage Appointments</a></li>
+                <li><a href="assign_to.php">Assign Mechanic</a></li>
+                <li><a href="manage_jobs.php"> Manage Jobs</a></li>
+                <li><a href="send_invoice.php">Billing</a></li>
+                <li><a href="reports.php"> Reports</a></li>
+                <li><a href="../logout.php" class="logout"> Logout</a></li>
             </ul>
         </nav>
     </header>

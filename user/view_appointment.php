@@ -1,8 +1,7 @@
 <?php
-  if (session_status() !== PHP_SESSION_ACTIVE) {
+if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
-
 
 include '../config.php';
 include '../utils.php';
@@ -13,9 +12,9 @@ if (!isset($_SESSION['user'])) {
 }
 
 // Fetch all appointments
-$sql = "SELECT aid, time, date, plateNo FROM appointment where cid = ?";
+$sql = "SELECT aid, time, date, make, model, plateNo, service_type FROM appointment WHERE cid = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i",  $_SESSION['user']['cid']);
+$stmt->bind_param("i", $_SESSION['user']['cid']);
 if ($stmt === false) {
     die('Prepare failed: ' . htmlspecialchars($conn->error));
 }
@@ -24,14 +23,11 @@ if (!$stmt->execute()) {
 }
 $result = $stmt->get_result();
 
-// coalescing operator `??`
-// checks if a variable exists and is not null,
-// and if it doesn't, it returns a default value
+// Coalescing operator to check for session messages
 $message = $_SESSION['success'] ?? $_SESSION['error'] ?? null;
 
-// `unset()` function destroys a variable. Once a variable is unset, it's no longer accessible
+// Unset session messages
 unset($_SESSION['success'], $_SESSION['error']);
-
 ?>
 
 <!DOCTYPE html>
@@ -39,28 +35,26 @@ unset($_SESSION['success'], $_SESSION['error']);
 <head>
     <title>View Appointments</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Basic styling for modals */
         .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
+            display: none;
+            position: fixed;
+            z-index: 1;
             left: 0;
             top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgb(0,0,0); 
-            background-color: rgba(0,0,0,0.4); 
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
         }
 
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; 
+            margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 40%; 
+            width: 40%;
         }
 
         .close {
@@ -77,30 +71,34 @@ unset($_SESSION['success'], $_SESSION['error']);
             cursor: pointer;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="sidebar">
     <h2>User Dashboard</h2>
     <nav>
         <ul>
-            <li><a href="dashboard.php"><i class="class fas fa-tachometer-alt"></i>Dashboard</a></li>
-            <li><a href="create_appointment.php"><i class="fas fa-calendar-plus"></i> Create Appointment</a></li>
-            <li><a href="view_appointment.php"><i class="fas fa-calendar-check"></i> View Appointments</a></li>
-            <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="dashboard.php">Dashboard</a></li>
+            <li><a href="create_appointment.php">Create Appointment</a></li>
+            <li><a href="view_appointment.php">View Appointments</a></li>
+            <li><a href="../logout.php" class="logout">Logout</a></li>
         </ul>
     </nav>
 </div>
 <div class="container">
 <?= $message ?>
 
-<?php if($result->num_rows > 0):?>
+<?php if($result->num_rows > 0): ?>
     <table>
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Time</th>
                 <th>Date</th>
+                <th>Vehicle Make</th>
+                <th>Vehicle Model</th>
                 <th>Plate Number</th>
+                <th>Service Type</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -110,8 +108,11 @@ unset($_SESSION['success'], $_SESSION['error']);
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($row['aid']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['time']) . "</td>";
-                    echo "<td>" . htmlspecialchars( date('jS M Y', strtotime($row['date']))) . "</td>";
+                    echo "<td>" . htmlspecialchars(date('jS M Y', strtotime($row['date']))) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['make']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['model']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['plateNo']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['service_type']) . "</td>";
                     echo "<td>";
                     echo "<button class='btn' onclick='openModal(\"rescheduleModal\", \"" . htmlspecialchars($row['aid']) . "\")'><i class='fas fa-calendar-edit'></i> Reschedule</button> | ";
                     echo "<button class='btn' onclick='openModal(\"payInvoiceModal\", \"" . htmlspecialchars($row['aid']) . "\")'><i class='fas fa-credit-card'></i> Pay Invoice</button> | ";
@@ -119,13 +120,12 @@ unset($_SESSION['success'], $_SESSION['error']);
                     echo "</td>";
                     echo "</tr>";
                 }
-            
             ?>
         </tbody>
     </table>
-    <?php else :?>
-        <h3>No appointments found!</h3>
-        <?php endif?>
+<?php else: ?>
+    <h3>No appointments found!</h3>
+<?php endif ?>
 </div>
 
 <!-- Reschedule Modal -->
@@ -133,12 +133,12 @@ unset($_SESSION['success'], $_SESSION['error']);
     <div class="modal-content">
         <span class="close" onclick="closeModal('rescheduleModal')">&times;</span>
         <h2>Reschedule Appointment</h2>
-        <form method="post" action="reschedule_appointment.php">
+        <form id="rescheduleForm">
             <input type="hidden" id="rescheduleAid" name="aid">
-            <label for="newDate">New Date:</label>
-            <input type="date" id="newDate" name="date" required>
-            <label for="newTime">New Time:</label>
-            <input type="time" id="newTime" name="time" required>
+            <label for="newDate">New Date (YYYY-MM-DD):</label>
+            <input type="text" id="newDate" name="date" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" title="Enter date in YYYY-MM-DD format" />
+            <label for="newTime">New Time (HH:MM):</label>
+            <input type="text" id="newTime" name="time" placeholder="HH:MM" pattern="\d{2}:\d{2}" title="Enter time in HH:MM format" />
             <button type="submit">Reschedule</button>
         </form>
     </div>
@@ -149,10 +149,10 @@ unset($_SESSION['success'], $_SESSION['error']);
     <div class="modal-content">
         <span class="close" onclick="closeModal('payInvoiceModal')">&times;</span>
         <h2>Pay Invoice</h2>
-        <form method="post" action="pay_invoice.php">
+        <form id="payInvoiceForm">
             <input type="hidden" id="payInvoiceAid" name="aid">
             <label for="amount">Amount:</label>
-            <input type="text" id="amount" name="amount" required>
+            <input type="text" id="amount" name="amount">
             <button type="submit">Pay</button>
         </form>
     </div>
@@ -163,8 +163,9 @@ unset($_SESSION['success'], $_SESSION['error']);
     <div class="modal-content">
         <span class="close" onclick="closeModal('cancelModal')">&times;</span>
         <h2>Cancel Appointment</h2>
-        <form method="post" action="cancel_appointment.php">
-            <input type="hidden" id="cancelAid" name="aid">
+        <form id="cancelForm">
+            <input type="hidden" id="cancelAid" name="aid"> <!-- Hidden field for appointment ID -->
+            <h1 id="cancelAidDisplay"></h1>
             <p>Are you sure you want to cancel this appointment?</p>
             <button type="submit">Yes, Cancel</button>
             <button type="button" onclick="closeModal('cancelModal')">No, Keep</button>
@@ -173,10 +174,28 @@ unset($_SESSION['success'], $_SESSION['error']);
 </div>
 
 <script>
-    function openModal(modalId, aid) {
-        document.getElementById(modalId).style.display = "block";
-        document.getElementById(modalId + 'Aid').value = aid;
+   function openModal(modalId, aid) {
+    // Construct the full ID for the modal and the hidden input field
+    const modalElement = document.getElementById(modalId);
+    const hiddenInput = document.getElementById(modalId + 'Aid');
+    
+    // Display the modal
+    modalElement.style.display = "block";
+    
+    // Set the value of the hidden input field with the appointment ID
+    if (hiddenInput) {
+        hiddenInput.value = aid;
     }
+
+    // Special handling for cancelModal
+    if (modalId === 'cancelModal') {
+        const cancelAidDisplay = document.getElementById('cancelAidDisplay');
+        if (cancelAidDisplay) {
+            cancelAidDisplay.textContent = "Appointment ID: " + aid;
+        }
+    }
+}
+
 
     function closeModal(modalId) {
         document.getElementById(modalId).style.display = "none";
@@ -187,6 +206,51 @@ unset($_SESSION['success'], $_SESSION['error']);
             event.target.style.display = "none";
         }
     }
+
+    // AJAX for rescheduling an appointment
+    $('#rescheduleForm').on('submit', function(e) {
+        e.preventDefault();
+        $.ajax({
+            url: 'reschedule_appointment.php',
+            type: 'POST',
+            data: $(this).serialize(), // Serialize the form data
+            success: function(response) {
+                alert('Appointment rescheduled successfully.');
+                closeModal('rescheduleModal');
+            },
+            error: function() {
+                alert('An error occurred while rescheduling the appointment.');
+            }
+        });
+    });
+
+   // AJAX for canceling an appointment
+$('#cancelForm').on('submit', function(e) {
+    e.preventDefault(); // Prevent the default form submission
+    
+    // Get the appointment ID from the cancelAidDisplay element
+    const cancelAidDisplay = $('#cancelAidDisplay').text();
+    const aid = cancelAidDisplay.replace('Appointment ID: ', '').trim();
+    
+    $.ajax({
+        url: 'cancel_appointment.php',
+        type: 'POST',
+        data: { aid: aid }, // Send the appointment ID
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                alert(response.message);
+                closeModal('cancelModal');
+                location.reload(); 
+            } else {
+                alert(response.message);
+            }
+        },
+        error: function() {
+            alert('An error occurred while canceling the appointment.');
+        }
+    });
+});
 </script>
 
 </body>

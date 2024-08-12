@@ -29,7 +29,6 @@ $jobsResult = $jobStmt->get_result();
 <head>
     <title>Jobs Report</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/admin_style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* General body styles */
         body {
@@ -135,10 +134,10 @@ $jobsResult = $jobStmt->get_result();
         <h2>Admin Dashboard</h2>
         <nav>
             <ul>
-                <li><a href="dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="create_appointment.php"><i class="fas fa-calendar-plus"></i> Create Appointment</a></li>
-                <li><a href="view_appointment.php"><i class="fas fa-calendar-check"></i> View Appointments</a></li>
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="../admin_dashboard.php"> Dashboard</a></li>
+                <li><a href="../create_appointment.php"> Create Appointment</a></li>
+                <li><a href="../view_appointment.php"> View Appointments</a></li>
+                <li><a href="../../logout.php" class="logout"> Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -163,7 +162,7 @@ $jobsResult = $jobStmt->get_result();
                     <option value="completed" <?php echo $jobStatus == 'completed' ? 'selected' : ''; ?>>Completed</option>
                     <option value="pending" <?php echo $jobStatus == 'pending' ? 'selected' : ''; ?>>Pending</option>
                 </select>
-                <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
+                <button type="submit"> Apply Filters</button>
             </form>
         </div>
 
@@ -177,8 +176,8 @@ $jobsResult = $jobStmt->get_result();
                         <th>Estimated Time</th>
                         <th>Total Time Spent</th>
                         <th>Status</th>
+                        <th>Vehicle Make</th>
                         <th>Vehicle Model</th>
-                        <th>Vehicle Type</th>
                         <th>Date</th>
                     </tr>
                 </thead>

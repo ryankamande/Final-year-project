@@ -6,11 +6,12 @@
 // Include the configuration file to establish a database connection
 include '../config.php';
 include '../utils.php';
+include '../session.php';
 
-if (!isset($_SESSION['user'])) {
-    header('Location: ../login.php');
-    exit;
-}
+// if (!isset($_SESSION['user'])) {
+//     header('Location: ../login.php');
+//     exit;
+// }
 
 
 
@@ -68,7 +69,6 @@ $conn->close();
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Basic styling for dashboard cards */
         .card-container {
@@ -111,10 +111,10 @@ $conn->close();
         <h2>User Dashboard</h2>
         <nav>
             <ul>
-                <li><a href="dashboard.php"><i class="class fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="create_appointment.php"><i class="fas fa-plus"></i> Create Appointment</a></li>
-                <li><a href="view_appointment.php"><i class="fas fa-calendar-check"></i> View Appointments</a></li>
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="dashboard.php"> Dashboard</a></li>
+                <li><a href="create_appointment.php"> Create Appointment</a></li>
+                <li><a href="view_appointment.php"> View Appointments</a></li>
+                <li><a href="../logout.php" class="logout"> Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -125,22 +125,18 @@ $conn->close();
         <!-- Dashboard cards -->
         <div class="card-container">
             <div class="card">
-                <i class="fas fa-calendar-alt"></i>
                 <h3><?php echo ($appointmentsCount); ?></h3>
                 <p>Appointments</p>
             </div>
             <div class="card">
-                <i class="fas fa-cogs"></i>
                 <h3><?php echo ($inProgressCount); ?></h3>
                 <p>In Progress</p>
             </div>
             <div class="card">
-                <i class="fas fa-hourglass-half"></i>
                 <h3><?php echo ($pendingPaymentsCount); ?></h3>
                 <p>Pending Payments</p>
             </div>
             <div class="card">
-                <i class="fas fa-check-circle"></i>
                 <h3><?php echo ($completedCount); ?></h3>
                 <p>Completed</p>
             </div>

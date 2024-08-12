@@ -1,12 +1,10 @@
 <?php
 include 'config.php';
-include 'functions.php';
-
+include 'utils.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username =  Utils::sanitizeInput($_POST['username']);
     $password =  Utils::sanitizeInput($_POST['password']);
     $role =  Utils::sanitizeInput($_POST['role']);
-
     $stmt = $conn->prepare("SELECT * FROM employee WHERE username = ? AND type = ?");
     $stmt->bind_param("ss", $username, $role);
     $stmt->execute();
@@ -33,32 +31,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee/Admin Login</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/register_style.css">
 </head>
 <body>
-    <header>
-        <h1>Employee/Admin Login</h1>
-    </header>
     <div class="container">
-        <form action="employee_admin_login.php" method="post">
-            <label for="username"><i class="fas fa-user"></i> Username</label>
-            <input type="text" id="username" name="username" required>
-
-            <label for="password"><i class="fas fa-lock"></i> Password</label>
-            <input type="password" id="password" name="password" required>
-
-            <label for="role"><i class="fas fa-user-tag"></i> User Role</label>
-            <select id="role" name="role" required>
-                <option value="Admin">Admin</option>
-                <option value="Mechanic">Mechanic</option>
-            </select>
-
-            <button type="submit"><i class="fas fa-sign-in-alt"></i> Login</button>
-        </form>
+        <div class="header">
+            <h1>Employee/Admin Login</h1>
+        </div>
+        <div class="content">
+            <form action="employee_admin_login.php" method="post">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username"  >
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password"  >
+                </div>
+                <div class="form-group">
+                    <label for="role">User Role</label>
+                    <select id="role" name="role"  >
+                        <option value="Admin">Admin</option>
+                        <option value="Mechanic">Mechanic</option>
+                    </select>
+                </div>
+                <button type="submit" class="button">Login</button>
+            </form>
+            <ul class="inline-links">
+                <li>
+                    <span>Back to <a class="link" href="index.php">Home</a></span>
+                </li>
+            </ul>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 HMS Garage Management System. All rights reserved.</p>
+        </div>
     </div>
 </body>
 </html>

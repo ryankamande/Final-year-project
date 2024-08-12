@@ -1,118 +1,108 @@
-// Wait for the document to finish loading before executing the code
-document.addEventListener('DOMContentLoaded', function() {
-    // Registration form validation
-    const registrationForm = document.querySelector('form[action="register_process.php"]');
-    if (registrationForm) {
-      // Add an event listener to the registration form's submit event
-      registrationForm.addEventListener('submit', function(event) {
-        // Initialize a flag to track whether the form is valid
-        let valid = true;
-  
-        // Get the values of the form fields
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-        const confirmPassword = document.getElementById('confirm_password').value.trim();
-  
-        // Check if the name field is empty
-        if (!name) {
-          // Display an alert message if the name field is empty
-          alert('Name is required');
-          // Set the valid flag to false
-          valid = false;
-        }
-  
-        // Check if the email field is empty
-        if (!email) {
-          // Display an alert message if the email field is empty
-          alert('Email is required');
-          // Set the valid flag to false
-          valid = false;
-        } else if (!validateEmail(email)) {
-          // Display an alert message if the email format is invalid
-          alert('Invalid email format');
-          // Set the valid flag to false
-          valid = false;
-        }
-  
-        // Check if the password field is empty
-        if (!password) {
-          // Display an alert message if the password field is empty
-          alert('Password is required');
-          // Set the valid flag to false
-          valid = false;
-        } else if (password.length < 6) {
-          // Display an alert message if the password is too short
-          alert('Password must be at least 6 characters long');
-          // Set the valid flag to false
-          valid = false;
-        }
-  
-        // Check if the confirm password field is empty
-        if (!confirmPassword) {
-          // Display an alert message if the confirm password field is empty
-          alert('Confirm Password is required');
-          // Set the valid flag to false
-          valid = false;
-        } else if (password !== confirmPassword) {
-          // Display an alert message if the passwords do not match
-          alert('Passwords do not match');
-          // Set the valid flag to false
-          valid = false;
-        }
-  
-        // If the form is not valid, prevent the default submit behavior
-        if (!valid) {
-          event.preventDefault();
-        }
-      });
+document.querySelector('form').addEventListener('submit', function(event) {
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('signupPassword').value;
+    var username = document.getElementById('username').value;
+
+    // Email validation
+    if (!validateEmail(email)) {
+        alert("Please enter a valid email address.");
+        event.preventDefault(); // Prevent form submission
     }
-  
-    // Login form validation
-    const loginForm = document.querySelector('form[action="login_process.php"]');
-    if (loginForm) {
-      // Add an event listener to the login form's submit event
-      loginForm.addEventListener('submit', function(event) {
-        // Initialize a flag to track whether the form is valid
-        let valid = true;
-  
-        // Get the values of the form fields
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value.trim();
-  
-        // Check if the email field is empty
-        if (!email) {
-          // Display an alert message if the email field is empty
-          alert('Email is required');
-          // Set the valid flag to false
-          valid = false;
-        } else if (!validateEmail(email)) {
-          // Display an alert message if the email format is invalid
-          alert('Invalid email format');
-          // Set the valid flag to false
-          valid = false;
-        }
-  
-        // Check if the password field is empty
-        if (!password) {
-          // Display an alert message if the password field is empty
-          alert('Password is required');
-          // Set the valid flag to false
-          valid = false;
-        }
-  
-        // If the form is not valid, prevent the default submit behavior
-        if (!valid) {
-          event.preventDefault();
-        }
-      });
+
+    // Password validation
+    if (!validatePassword(password)){
+        alert("Password must be at least 8 characters long and contain at least one capital letter.");
+        event.preventDefault(); // Prevent form submission
     }
-  
-    // Email validation function
-    function validateEmail(email) {
-      // Regular expression to match a valid email format
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      // Return true if the email matches the regular expression, false otherwise
-      return re.test(email);
+
+    // Username validation
+    if (username.trim() === "") {
+        alert("Username cannot be empty.");
+        event.preventDefault(); // Prevent form submission
     }
-  });
+
+    // If any validation fails
+    if (!validateEmail(email) || !validatePassword(password) || username.trim() === "") {
+        alert("Registration failed. Please check the inputs and try again.");
+        event.preventDefault(); // Prevent form submission
+    }
+
+    // If all validations pass
+    if (validateEmail(email) && validatePassword(password) && username.trim() !== "") {
+        alert("Registration successful!");
+    }
+});
+
+function validateEmail(email) {
+    // Check for the presence of exactly one "@" symbol
+    var atSymbolCount = 0;
+    for (var i = 0; i < email.length; i++) {
+        if (email[i] === '@') {
+            atSymbolCount++;
+        }
+    }
+    if (atSymbolCount !== 1) {
+        return false;
+    }
+
+    // Split the email into local part and domain part
+    var atPosition = email.indexOf('@');
+    var localPart = email.slice(0, atPosition);
+    var domainPart = email.slice(atPosition + 1);
+
+    // Ensure both parts are not empty
+    if (localPart.length === 0 || domainPart.length === 0) {
+        return false;
+    }
+
+    // Ensure the domain part contains a period (.)
+    if (domainPart.indexOf('.') === -1) {
+        return false;
+    }
+
+    // Ensure the domain doesn't start or end with a period
+    if (domainPart[0] === '.' || domainPart[domainPart.length - 1] === '.') {
+        return false;
+    }
+
+    // Ensure the local part contains only valid characters
+    var validLocalChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._%+-";
+    for (var i = 0; i < localPart.length; i++) {
+        if (validLocalChars.indexOf(localPart[i]) === -1) {
+            return false;
+        }
+    }
+
+    // Ensure the domain part contains only valid characters
+    var validDomainChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.-";
+    for (var i = 0; i < domainPart.length; i++) {
+        if (validDomainChars.indexOf(domainPart[i]) === -1) {
+            return false;
+        }
+    }
+
+    // All checks passed
+    return true;
+}
+function validatePassword(password) {
+    // Check if the password is at least 8 characters long
+    if (password.length < 8) {
+        return false;
+    }
+
+    // Check if the password contains at least one uppercase letter
+    var hasUppercase = false;
+    for (var i = 0; i < password.length; i++) {
+        if (password[i] >= 'A' && password[i] <= 'Z') {
+            hasUppercase = true;
+            break;
+        }
+    }
+
+    // If it has an uppercase letter, return true
+    if (hasUppercase) {
+        return true;
+    } else {
+        return false;
+    }
+}

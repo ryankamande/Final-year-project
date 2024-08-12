@@ -39,8 +39,6 @@ $conn->close();
     <title>Manage Jobs</title>
     <!-- Link to the stylesheet for styling the page -->
     <link rel="stylesheet" type="text/css" href="../assets/css/style.css">
-    <!-- Link to the Font Awesome library for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Include jQuery for modal functionality -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -89,13 +87,11 @@ $conn->close();
         <nav>
             <ul>
                 <!-- Link to the employee dashboard page -->
-                <li><a href="employee_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <!-- Link to the manage attendance page -->
-                <li><a href="manage_attendance.php"><i class="fas fa-calendar-check"></i> Manage Attendance</a></li>
+                <li><a href="employee_dashboard.php"> Dashboard</a></li>
                 <!-- Link to the manage jobs page (current page) -->
-                <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> View Jobs</a></li>
+                <li><a href="manage_jobs.php"> View Jobs</a></li>
                 <!-- Link to the logout page -->
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="../logout.php" class="logout"> Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -106,9 +102,9 @@ $conn->close();
         <nav>
             <ul>
                 <!-- Link to the employee dashboard page -->
-                <li><a href="employee_dashboard.php"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="employee_dashboard.php"> Dashboard</a></li>
                 <!-- Link to the logout page -->
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="../logout.php" class="logout"> Logout</a></li>
             </ul>
         </nav>
     </header>
@@ -121,11 +117,11 @@ $conn->close();
             <thead>
                 <tr>
                     <!-- Table headers for job data -->
-                    <th>Job ID <i class="fas fa-id-badge"></i></th>
-                    <th>Description <i class="fas fa-file-alt"></i></th>
-                    <th>Status <i class="fas fa-tasks"></i></th>
-                    <th>Assigned To <i class="fas fa-user"></i></th>
-                    <th>Actions <i class="fas fa-cogs"></i></th>
+                    <th>Job ID </th>
+                    <th>Description </th>
+                    <th>Status </th>
+                    <th>Assigned To </th>
+                    <th>Actions </th>
                 </tr>
             </thead>
             <tbody>

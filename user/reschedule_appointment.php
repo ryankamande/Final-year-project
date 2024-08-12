@@ -1,34 +1,42 @@
 <?php
-session_start();
+// Ensure that session is active
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 include '../config.php';
 include '../utils.php';
 
 // Check if the customer is logged in
-if (!isset($_SESSION['user']) || isset($_SESSION['user']['id'])) {
-    header('Location: ../login.php');
-    exit();
+if (!isset($_SESSION['user'])) {
+    Utils::redirect_to('../login.php');
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $appointmentId = isset($_POST['aid']) ? (int)$_POST['aid'] : 0;
-    $newDate =  Utils::sanitizeInput($_POST['date']);
-    $newTime =  Utils::sanitizeInput($_POST['time']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $aid = $_POST['aid'];
+    $newDate = $_POST['date'];
+    $newTime = $_POST['time'];
 
-    $sql = "UPDATE appointment SET date = ?, time = ? WHERE aid = ? AND cid = ?";
-    $stmt = $conn->prepare($sql);
-    if ($stmt === false) {
-        die('Prepare failed: ' . htmlspecialchars($conn->error));
+    // Start a transaction
+    $conn->begin_transaction();
+
+    try {
+        // Update the appointment date and time
+        $stmt = $conn->prepare("UPDATE appointment SET date = ?, time = ? WHERE aid = ? AND cid = ?");
+        $stmt->bind_param("ssii", $newDate, $newTime, $aid, $_SESSION['user']['cid']);
+        $stmt->execute();
+        $stmt->close();
+
+        // Commit transaction
+        $conn->commit();
+
+        $_SESSION['success'] = "Appointment rescheduled successfully.";
+    } catch (Exception $e) {
+        // Rollback transaction in case of error
+        $conn->rollback();
+        $_SESSION['error'] = "Error: " . $e->getMessage();
     }
-    $stmt->bind_param("ssii", $newDate, $newTime, $appointmentId, $_SESSION['user']['id']);
-    if ($stmt->execute()) {
-        header('Location: view_appointment.php?message=Appointment rescheduled successfully');
-    } else {
-        echo "Error: " . htmlspecialchars($stmt->error);
-    }
-    $stmt->close();
-} else {
-    header('Location: view_appointment.php');
 }
 
-$conn->close();
-?>
+// Redirect back to view appointments page
+Utils::redirect_to('view_appointment.php');

@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user && password_verify($password, $user['password'])) {
         
         $_SESSION['user'] = $user;
-        echo "TEST" . $_SESSION['user'];
+        // echo "TEST" . $_SESSION['user'];
         Utils::redirect_to('user/dashboard.php');
     } else {
         echo "Invalid email or password";
@@ -25,22 +25,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <title>Customer Login</title>
-    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet"  href="assets/css/login_style.css">
+    
 </head>
 <body>
-    <header>
-        <h1>Customer Login</h1>
-    </header>
-    <div class="container">
+<div class="container">
+        <div class="header">
+            <h1>Customer Login</h1>
+        
         <form action="login.php" method="post">
-            <label for="username"><i class="fas fa-envelope"></i> Email</label>
-            <input type="email" id="email" name="email" placeholder="user@example.com" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="user@example.com"  >
 
-            <label for="password"><i class="fas fa-lock"></i> Password</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password"  >
 
-            <button type="submit"><i class="fas fa-sign-in-alt"></i> Login</button>
+            <button type="submit">Login</button>
         </form>
     </div>
 </body>

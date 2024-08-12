@@ -10,7 +10,7 @@ if (!isset($_SESSION['user']) && $_SESSION['user']['role'] == 'mechanic') {
 <head>
     <title>Employee Dashboard</title>
     <link rel="stylesheet" type="text/css" href="assets/css/employee_style.css"> <!-- Custom CSS for employee dashboard -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
         /* Basic styling for the dashboard cards */
         .dashboard-cards {
@@ -64,9 +64,9 @@ if (!isset($_SESSION['user']) && $_SESSION['user']['role'] == 'mechanic') {
         <h2>Employee Dashboard</h2>
         <nav>
             <ul>
-                <li><a href="employee_dashboard.php"><i class="class fa fas tachometer alt"></i>Dashboard</a></li>
-                <li><a href="manage_jobs.php"><i class="fas fa-briefcase"></i> View Jobs</a></li>
-                <li><a href="../logout.php" class="logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a href="employee_dashboard.php">Dashboard</a></li>
+                <li><a href="manage_jobs.php"> View Jobs</a></li>
+                <li><a href="../logout.php" class="logout">Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -76,18 +76,15 @@ if (!isset($_SESSION['user']) && $_SESSION['user']['role'] == 'mechanic') {
         </header>
         <div class="dashboard-cards">
             <div class="card">
-                <i class="fas fa-calendar-check"></i>
                 <h3>Appointments</h3>
                 <p>5 Upcoming</p>
             </div>
-            <div class="card">
-                <i class="fas fa-tachometer-alt"></i>
+            <div class="card">>
                 <h3>Tasks</h3>
                 <p>12 In Progress</p>
             </div>
          
             <div class="card">
-                <i class="fas fa-cogs"></i>
                 <h3>Jobs</h3>
                 <p>7 Assigned</p>
             </div>
