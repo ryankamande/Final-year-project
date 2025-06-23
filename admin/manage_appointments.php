@@ -42,7 +42,7 @@ $conn->close();
     <!-- Set the title of the page -->
     <title>View Appointments</title>
 
-    <!-- Link to the external CSS file for styling -->
+    
     <link rel="stylesheet" type="text/css" href="assets/css/admin_style.css">
 </head>
 <body>
@@ -81,11 +81,11 @@ $conn->close();
     <!-- Table header defining the column names -->
     <thead>
         <tr>
-            <th>Appointment ID</th> <!-- Column for Appointment ID -->
-            <th>Time</th>           <!-- Column for Appointment Time -->
-            <th>Date</th           <!-- Column for Appointment Date -->
-            <th>Plate No</th>      <!-- Column for Vehicle Plate Number -->
-            <th>Service Type</th>  <!-- Column for Service Type -->
+            <th>Appointment ID</th> 
+            <th>Time</th>           
+            <th>Date</th>           
+            <th>Plate No</th>      
+            <th>Service Type</th>  
         </tr>
     </thead>
     
